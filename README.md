@@ -1,5 +1,5 @@
 # JavaCryptoArchAlogrithms
-Create Enums for Java Cryptography Architecture Standard Algorithms for your system by running a the Main.java in your IDE.
+Dynamically create Enums for Java Cryptography Architecture Standard Algorithms for your system by running Main.java in your IDE.
 
 http://docs.oracle.com/javase/8/docs/technotes/guides/security/StandardNames.html
 
