@@ -48,4 +48,4 @@ the <code>ProviderAlgorithmRetrievingFactory.getAlgorithms()</code> method.
 The algorithm enum java files will not be overridden if the Main.java is run again. The file will need to
 be deleted, moved, or renamed in order to be recreated.
 
-This has only been tested on macOS Sierra using vanila jdk1.8.0_92.
+This has only been tested on macOS Sierra using vanila jdk1.8.0_92 & jdk1.8.0_121.
