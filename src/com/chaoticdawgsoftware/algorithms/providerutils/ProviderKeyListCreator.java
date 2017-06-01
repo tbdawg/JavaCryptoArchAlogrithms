@@ -1,7 +1,7 @@
 package com.chaoticdawgsoftware.algorithms.providerutils;
 
 import java.security.Provider;
-import java.util.Enumeration;
+import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -12,9 +12,8 @@ import java.util.Set;
 class ProviderKeyListCreator {
 
     static void getKeyList(String algorithm, Set<String> keyNameSet, Provider provider) {
-        Enumeration<Object> providerKeys = provider.keys();
-        while (providerKeys.hasMoreElements())
-            addKeyNameToSet(getKeyName(algorithm, providerKeys.nextElement()), keyNameSet);
+        for(Object providerKey: Collections.list(provider.keys()))
+            addKeyNameToSet(getKeyName(algorithm, providerKey), keyNameSet);
     }
 
     private static String getKeyName(String algorithm, Object key) {
