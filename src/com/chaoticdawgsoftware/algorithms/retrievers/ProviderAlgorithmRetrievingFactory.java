@@ -11,31 +11,34 @@ import java.util.*;
 
 class ProviderAlgorithmRetrievingFactory {
     private static Provider[] providers = Security.getProviders();
-    private static Set<String> itemSet = new HashSet<>();
+    private static Set<String> keyNameSet = new HashSet<>();
 
     static ArrayList<String> getAlgorithmList(String algorithm) {
-        ArrayList<String> itemList;
-        String item = "";
+        String keyName = "";
         for (Provider provider : providers) {
-            Enumeration<Object> providerObj = provider.keys();
-            while (providerObj.hasMoreElements()) {
-                Object obj = providerObj.nextElement();
-                if (obj.toString().startsWith(algorithm + ".")) {
-                    item = obj.toString().substring((algorithm + ".").length());
+            Enumeration<Object> providerKeys = provider.keys();
+            while (providerKeys.hasMoreElements()) {
+                Object key = providerKeys.nextElement();
+                if (key.toString().startsWith(algorithm + ".")) {
+                    keyName = key.toString().substring((algorithm + ".").length());
                 }
-                if (obj.toString().startsWith("Alg.Alias." + algorithm + ".")) {
-                    item = obj.toString().substring(("Alg.Alias." + algorithm + ".").length());
+                if (key.toString().startsWith("Alg.Alias." + algorithm + ".")) {
+                    keyName = key.toString().substring(("Alg.Alias." + algorithm + ".").length());
                 }
-                String[] strings = item.split(" ");
-                item = strings[0];
-                if (!item.equals("")) {
-                    itemSet.add(item);
+                String[] strings = keyName.split(" ");
+                keyName = strings[0];
+                if (!keyName.equals("")) {
+                    keyNameSet.add(keyName);
                 }
             }
         }
 
-        itemList = new ArrayList<>(itemSet);
-        Collections.sort(itemList);
-        return itemList;
+        return getSortedAlgorithmList();
+    }
+
+    private static ArrayList<String> getSortedAlgorithmList() {
+        ArrayList<String> keyList = new ArrayList<>(keyNameSet);
+        Collections.sort(keyList);
+        return keyList;
     }
 }

@@ -6,7 +6,6 @@ package com.chaoticdawgsoftware.algorithms;
  */
 
 import com.chaoticdawgsoftware.algorithms.retrievers.*;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -39,21 +38,26 @@ public class CreateAlgorithmEnums {
     };
 
     public static void create() {
+        createEnumsDirectory();
+        createEnums();
+    }
+
+    private static void createEnums() {
         String fullClassName;
+        String[] splitFullClassName;
         String packageName;
         String className;
-        String[] splitFullClassName;
 
         for (Retriever retriever: retrievers) {
 
             fullClassName = retriever.getClass().getName();
             splitFullClassName = fullClassName.split("\\.");
-            packageName = getPackageName(splitFullClassName);
+            packageName = getPackageNameFromFullClassName(splitFullClassName);
             className = splitFullClassName[splitFullClassName.length - 1];
             className = className.substring(0, className.length() - "Retriever".length());
 
             FileWriter out = null;
-            String filePath = getFilePath(splitFullClassName);
+            String filePath = buildPathFromClassName(splitFullClassName);
             String fileName = filePath + className + "Algorithms.java";
 
             if (!(new File(fileName).exists())) {
@@ -78,7 +82,8 @@ public class CreateAlgorithmEnums {
                         }
                         out.write("\t" + temp);
                         if (needsAnonymous) {
-                            out.write(" {\n\t\tpublic String toString() {\n\t\t\treturn \"" + toString + "\";\n\t\t}\n\t}");
+                            out.write(" {\n\t\tpublic String toString() {\n\t\t\treturn \""
+                                    + toString + "\";\n\t\t}\n\t}");
                         }
                         if (iterator.hasNext()) {
                             out.write(",");
@@ -101,8 +106,18 @@ public class CreateAlgorithmEnums {
         }
     }
 
+    private static void createEnumsDirectory() {
+        String fullClassName= CreateAlgorithmEnums.class.getName();
+        String[] splitFullClassName = fullClassName.split("\\.");
+        String path = buildPathFromClassName(splitFullClassName);
+        File directory = new File(path);
+        if(!(directory.exists()))
+             if(!directory.mkdir())
+                 // Change to throw an error
+                 System.out.println("Error: unable to create directory");
+    }
 
-    private static String getPackageName(String[] splitFullClassName) {
+    private static String getPackageNameFromFullClassName(String[] splitFullClassName) {
         String packageName = "";
         if (splitFullClassName.length > 0) {
             for (int i = 0; i < 3; ++i) {
@@ -112,22 +127,24 @@ public class CreateAlgorithmEnums {
                 }
             }
         } else {
+            // PackageNameUnderflowException
             throw new ArrayIndexOutOfBoundsException("Index must be greater than zero.");
         }
         return packageName;
     }
 
     // "src/" + splitFullClassName[0] + "/" + splitFullClassName[1] + "/" + splitFullClassName[2] + "/";
-    private static String getFilePath(String[] splitFullClassName) {
+    private static String buildPathFromClassName(String[] splitFullClassName) {
         String filePath = "src/";
         if (splitFullClassName.length > 0) {
             for (int i = 0; i < 3; ++i) {
                 filePath += splitFullClassName[i] + "/";
             }
         } else {
+            // FilePathUnderflowException
             throw new ArrayIndexOutOfBoundsException("Index must be greater than zero.");
         }
-        return filePath;
+        return filePath + "enums/";
     }
 
 }
