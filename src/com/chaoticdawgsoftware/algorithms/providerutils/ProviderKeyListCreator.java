@@ -1,30 +1,17 @@
-package com.chaoticdawgsoftware.algorithms.retrievers;
+package com.chaoticdawgsoftware.algorithms.providerutils;
 
 import java.security.Provider;
-import java.security.Security;
-import java.util.*;
+import java.util.Enumeration;
+import java.util.Set;
 
 /**
- * ProviderAlgorithmRetrievingFactory.java
- * Created by ChaoticDawg on 1/20/17.
+ * ProviderKeyListCreator.java
+ * Created by ChaoticDawg on 6/1/17.
  */
 
-class ProviderAlgorithmRetrievingFactory {
-    private static Provider[] providers = Security.getProviders();
+class ProviderKeyListCreator {
 
-    static ArrayList<String> getAlgorithmList(String algorithm) {
-        return getSortedAlgorithmList(buildAlgorithmList(algorithm));
-    }
-
-    private static ArrayList<String> buildAlgorithmList(String algorithm) {
-        Set<String> keyNameSet = new HashSet<>();
-        for (Provider provider : providers)
-            getKeyList(algorithm, keyNameSet, provider);
-
-        return new ArrayList<>(keyNameSet);
-    }
-
-    private static void getKeyList(String algorithm, Set<String> keyNameSet, Provider provider) {
+    static void getKeyList(String algorithm, Set<String> keyNameSet, Provider provider) {
         Enumeration<Object> providerKeys = provider.keys();
         while (providerKeys.hasMoreElements())
             addKeyNameToSet(getKeyName(algorithm, providerKeys.nextElement()), keyNameSet);
@@ -57,10 +44,5 @@ class ProviderAlgorithmRetrievingFactory {
     private static void addKeyNameToSet(String keyName, Set<String> keyNameSet) {
         if (!keyName.equals(""))
             keyNameSet.add(keyName);
-    }
-
-    private static ArrayList<String> getSortedAlgorithmList(ArrayList<String> keyList) {
-        Collections.sort(keyList);
-        return keyList;
     }
 }

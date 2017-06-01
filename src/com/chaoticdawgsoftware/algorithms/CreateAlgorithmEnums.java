@@ -42,19 +42,32 @@ public class CreateAlgorithmEnums {
         createEnums();
     }
 
+    private static void createEnumsDirectory() {
+        String path = buildPathFromClassName((CreateAlgorithmEnums.class.getName()).split("\\."));
+        File directory = new File(path);
+        if(!(directory.exists()))
+            if(!directory.mkdir())
+                // Change to throw an error
+                System.out.println("Error: unable to create directory");
+    }
+
+    private static String buildPathFromClassName(String[] splitFullClassName) {
+        StringBuilder filePath = new StringBuilder("src/");
+        if (splitFullClassName.length > 0)
+            for (int i = 0; i < 3; ++i)
+                filePath.append(splitFullClassName[i]).append("/");
+        else
+            // FilePathUnderflowException
+            throw new ArrayIndexOutOfBoundsException("Index must be greater than zero.");
+
+        return filePath.append("enums/").toString();
+    }
+
     private static void createEnums() {
-        String fullClassName;
-        String[] splitFullClassName;
-        String packageName;
-        String className;
-
         for (Retriever retriever: retrievers) {
-
-            fullClassName = retriever.getClass().getName();
-            splitFullClassName = fullClassName.split("\\.");
-            packageName = getPackageNameFromFullClassName(splitFullClassName);
-            className = splitFullClassName[splitFullClassName.length - 1];
-            className = className.substring(0, className.length() - "Retriever".length());
+            String[] splitFullClassName = (retriever.getClass().getName()).split("\\.");
+            String packageName = getPackageNameFromFullClassName(splitFullClassName);
+            String className = getClassName(splitFullClassName);
 
             FileWriter out = null;
             String filePath = buildPathFromClassName(splitFullClassName);
@@ -106,45 +119,28 @@ public class CreateAlgorithmEnums {
         }
     }
 
-    private static void createEnumsDirectory() {
-        String fullClassName= CreateAlgorithmEnums.class.getName();
-        String[] splitFullClassName = fullClassName.split("\\.");
-        String path = buildPathFromClassName(splitFullClassName);
-        File directory = new File(path);
-        if(!(directory.exists()))
-             if(!directory.mkdir())
-                 // Change to throw an error
-                 System.out.println("Error: unable to create directory");
+    private static String getClassName(String[] splitFullClassName) {
+        String className;
+        className = splitFullClassName[splitFullClassName.length - 1];
+        className = className.substring(0, className.length() - "Retriever".length());
+        return className;
     }
 
     private static String getPackageNameFromFullClassName(String[] splitFullClassName) {
-        String packageName = "";
-        if (splitFullClassName.length > 0) {
-            for (int i = 0; i < 3; ++i) {
-                packageName += splitFullClassName[i];
-                if (i < 2) {
-                    packageName += ".";
-                }
-            }
-        } else {
+        if (splitFullClassName.length > 0)
+             return appendToPackageName(splitFullClassName);
+        else
             // PackageNameUnderflowException
             throw new ArrayIndexOutOfBoundsException("Index must be greater than zero.");
-        }
-        return packageName;
     }
 
-    // "src/" + splitFullClassName[0] + "/" + splitFullClassName[1] + "/" + splitFullClassName[2] + "/";
-    private static String buildPathFromClassName(String[] splitFullClassName) {
-        String filePath = "src/";
-        if (splitFullClassName.length > 0) {
-            for (int i = 0; i < 3; ++i) {
-                filePath += splitFullClassName[i] + "/";
-            }
-        } else {
-            // FilePathUnderflowException
-            throw new ArrayIndexOutOfBoundsException("Index must be greater than zero.");
+    private static String appendToPackageName(String[] splitFullClassName) {
+        StringBuilder packageName = new StringBuilder();
+        for (int i = 0; i < 3; ++i) {
+            packageName.append(splitFullClassName[i]);
+            if (i < 2)
+                packageName.append(".");
         }
-        return filePath + "enums/";
+        return packageName.toString();
     }
-
 }
