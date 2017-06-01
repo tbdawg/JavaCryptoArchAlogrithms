@@ -63,7 +63,7 @@ public class CreateAlgorithmEnums {
             if (!(new File(fileName).exists())) {
                 try {
                     out = new FileWriter(fileName);
-                    out.write("package " + packageName + ";\n\n");
+                    out.write("package " + packageName + ".enums;\n\n");
                     out.write("@SuppressWarnings({\"unused\", \"SpellCheckingInspection\"})\n");
                     out.write("public enum " + className + "Algorithms {\n");
                     ListIterator<String> iterator = retriever.getAlgorithms().listIterator();
