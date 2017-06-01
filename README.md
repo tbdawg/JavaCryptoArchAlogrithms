@@ -15,7 +15,7 @@ package to your project as needed.
 
 Example:<br>
 ...<br>
-<code>import com.chaoticdawgsoftware.algorithms.MacAlgorithms;</code><br>
+<code>import com.chaoticdawgsoftware.algorithms.enums.MacAlgorithms;</code><br>
 <code>import javax.crypto.Mac;</code><br>
 ...<br>
 ...<br>
