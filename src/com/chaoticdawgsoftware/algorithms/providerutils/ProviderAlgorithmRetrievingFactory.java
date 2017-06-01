@@ -13,7 +13,9 @@ public class ProviderAlgorithmRetrievingFactory {
     private static Provider[] providers = Security.getProviders();
 
     public static ArrayList<String> getAlgorithmList(String algorithm) {
-        return getSortedAlgorithmList(buildAlgorithmList(algorithm));
+        ArrayList<String> AlgorithmList = buildAlgorithmList(algorithm);
+        Collections.sort(AlgorithmList);
+        return AlgorithmList;
     }
 
     private static ArrayList<String> buildAlgorithmList(String algorithm) {
@@ -22,10 +24,5 @@ public class ProviderAlgorithmRetrievingFactory {
             ProviderKeyListCreator.getKeyList(algorithm, keyNameSet, provider);
 
         return new ArrayList<>(keyNameSet);
-    }
-
-    private static ArrayList<String> getSortedAlgorithmList(ArrayList<String> keyList) {
-        Collections.sort(keyList);
-        return keyList;
     }
 }
